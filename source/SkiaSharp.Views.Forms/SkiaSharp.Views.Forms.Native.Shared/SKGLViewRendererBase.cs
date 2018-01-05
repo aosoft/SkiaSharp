@@ -20,6 +20,10 @@ using SKNativePaintGLSurfaceEventArgs = SkiaSharp.Views.UWP.SKPaintGLSurfaceEven
 using Xamarin.Forms.Platform.MacOS;
 using SKNativeView = SkiaSharp.Views.Mac.SKGLView;
 using SKNativePaintGLSurfaceEventArgs = SkiaSharp.Views.Mac.SKPaintGLSurfaceEventArgs;
+#else
+using Xamarin.Forms.Platform.WinForms;
+using SKNativeView = SkiaSharp.Views.Desktop.SKGLControl;
+using SKNativePaintGLSurfaceEventArgs = SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs;
 #endif
 
 namespace SkiaSharp.Views.Forms
@@ -48,6 +52,11 @@ namespace SkiaSharp.Views.Forms
 			touchHandler = new SKTouchHandler(
 				args => ((ISKGLViewController)Element).OnTouch(args),
 				coord => (float)(coord * Control.ContentsScale));
+#else
+			touchHandler = new SKTouchHandler(
+				args => ((ISKCanvasViewController)Element).OnTouch(args),
+				//coord => Element.IgnorePixelScaling ? coord : (float)(coord * Control.Dpi));
+				coord => coord);
 #endif
 		}
 
